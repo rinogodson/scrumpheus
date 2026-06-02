@@ -43,6 +43,26 @@ export default {
       });
     }
 
+    if (url.pathname === "/api/user" && request.method === "GET") {
+      const authHeader = request.headers.get("Authorization");
+
+      const userResponse = await fetch(
+        "https://hackatime.hackclub.com/api/v1/users/current",
+        {
+          headers: { Authorization: authHeader },
+        },
+      );
+
+      const userData = await userResponse.json();
+      return new Response(JSON.stringify(userData), {
+        // LATE TODO: change this to the domain name when pushing
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
     return new Response("Not found", { status: 404 });
   },
 };

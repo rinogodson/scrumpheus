@@ -1,10 +1,22 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 import HomePage from "./HomePage";
 
 function Home() {
+  if (
+    localStorage.getItem("hackatime_access") &&
+    localStorage.getItem("hackatime_refresh")
+  ) {
+    return <Navigate to="/space" replace />;
+  }
   const loginWithHackatime = () => {
-    const clientId = "2w6C-2HyGp4DBQq8_bUX_G4ZkkUzdv2fHAX9oZUsjlE";
+    const clientId = import.meta.env.VITE_HACKATIME_CLIENT_ID;
     const redirectUri = encodeURIComponent(
       "http://localhost:5173/auth/callback",
     );
