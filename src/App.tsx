@@ -1,32 +1,180 @@
-import { Rocket } from "lucide-react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import HomePage from "./HomePage";
 
-const App = () => {
+function Home() {
+  const loginWithHackatime = () => {
+    const clientId = "2w6C-2HyGp4DBQq8_bUX_G4ZkkUzdv2fHAX9oZUsjlE";
+    const redirectUri = encodeURIComponent(
+      "http://localhost:5173/auth/callback",
+    );
+    window.location.href = `https://hackatime.hackclub.com/oauth/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+  };
+
   return (
-    <div className=" w-screen h-screen flex justify-start flex-col p-7 gap-7 items-center">
+    <div className="bg-black h-screen relative overflow-hidden w-screen flex flex-col justify-center items-center gap-10">
       <img src="/Scrumpheus.svg" alt="Scrumpheus" />
-      <div className="h-[90%] w-full rounded-[3rem] bg-black shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)] relative overflow-hidden">
-        {Array.from({ length: 60 }, (_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: (i % 3) + 1 + "px",
-              height: (i % 3) + 1 + "px",
-              top: ((i * 37 + 13) % 100) + "%",
-              left: ((i * 53 + 7) % 100) + "%",
-              opacity: ((i * 11 + 3) % 5) / 5 + 0.3,
-            }}
-          />
-        ))}
+      <style>{`
+        @keyframes twinkle {
+          0%, 100% { opacity: var(--base-opacity); }
+          50% { opacity: 0.05; }
+        }
+        @keyframes spin {
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-1px, 0.5px); }
+          20% { transform: translate(0.8px, -0.3px); }
+          30% { transform: translate(-0.5px, -0.8px); }
+          40% { transform: translate(0.3px, 1px); }
+          50% { transform: translate(-0.7px, -0.2px); }
+          60% { transform: translate(1px, 0.7px); }
+          70% { transform: translate(-0.3px, -0.5px); }
+          80% { transform: translate(0.5px, 0.3px); }
+          90% { transform: translate(-0.8px, 0.5px); }
+        }
+        .star {
+          animation: twinkle var(--duration) ease-in-out infinite;
+          animation-delay: var(--delay);
+        }
+      `}</style>
+      <div
+        className="absolute w-full h-full top-0 left-0"
+        style={{ animation: "shake 0.8s ease-in-out infinite" }}
+      >
+        <div
+          className="w-[200%] h-[200%] -z-199 overflow-hidden -top-1/2 -left-1/2 absolute"
+          style={{ animation: "spin 120s linear infinite" }}
+        >
+          {Array.from({ length: 100 }, (_, i) => {
+            const baseOpacity = ((i * 11 + 3) % 5) / 5 + 0.3;
+            return (
+              <div
+                key={i}
+                className="star absolute rounded-full bg-white"
+                style={
+                  {
+                    width: (i % 3) + 1 + "px",
+                    height: (i % 3) + 1 + "px",
+                    top: ((i * 37 + 13) % 100) + "%",
+                    left: ((i * 53 + 7) % 100) + "%",
+                    "--base-opacity": baseOpacity,
+                    "--duration": ((i * 73) % 3) + 2 + "s",
+                    "--delay": (-(i * 137.5) % 2) + "s",
+                  } as React.CSSProperties
+                }
+              />
+            );
+          })}
+        </div>
       </div>
-      <div className="h-fit w-fit rounded-2xl rounded-full border-[#FEF3E0] border-3 p-1 absolute bottom-10 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
-        <button className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_1.5px_2px_2px_rgba(255,255,255,0.3),inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]">
-          <Rocket className="w-5 h-5" />
-          Create a ship
-        </button>
+      <button
+        onClick={loginWithHackatime}
+        className="bg-[#D8A657] px-4 py-2 z-100 text-amber-950 text-lg rounded-[3px] active:brightness-130 hover:brightness-110 transition duration-100 font-bold flex items-center gap-2"
+      >
+        Login with Hackatime
+      </button>
+    </div>
+  );
+}
+
+function AuthCallback() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (code) {
+      fetch("http://localhost:8787/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("hackatime_access", data.access_token);
+          localStorage.setItem("hackatime_refresh", data.refresh_token);
+
+          navigate("/space");
+        });
+    }
+  }, [navigate]);
+
+  return (
+    <div className="bg-black h-screen relative overflow-hidden w-screen flex flex-col justify-center items-center gap-1">
+      <p className="text-white text-2xl">
+        You're now Travelling through a wormhole...
+      </p>
+      <p className="text-white/20 text-lg">LOGGING YOU IN TO SCRUMPHEUS...</p>
+      <style>{`
+        @keyframes twinkle {
+          0%, 100% { opacity: var(--base-opacity); }
+          50% { opacity: 0.05; }
+        }
+        @keyframes spin {
+          100% { transform: rotate(360deg) scale(1.5); }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-1px, 0.5px); }
+          20% { transform: translate(0.8px, -0.3px); }
+          30% { transform: translate(-0.5px, -0.8px); }
+          40% { transform: translate(0.3px, 1px); }
+          50% { transform: translate(-0.7px, -0.2px); }
+          60% { transform: translate(1px, 0.7px); }
+          70% { transform: translate(-0.3px, -0.5px); }
+          80% { transform: translate(0.5px, 0.3px); }
+          90% { transform: translate(-0.8px, 0.5px); }
+        }
+        .star {
+          animation: twinkle var(--duration) ease-in-out infinite;
+          animation-delay: var(--delay);
+        }
+      `}</style>
+      <div
+        className="absolute w-full h-full top-0 left-0"
+        style={{ animation: "shake 0.8s ease-in-out infinite" }}
+      >
+        <div
+          className="w-[200%] h-[200%] -z-199 overflow-hidden -top-1/2 -left-1/2 absolute"
+          style={{ animation: "spin 1s linear infinite" }}
+        >
+          {Array.from({ length: 500 }, (_, i) => {
+            const baseOpacity = ((i * 11 + 3) % 5) / 5 + 0.3;
+            return (
+              <div
+                key={i}
+                className="star absolute rounded-full bg-white"
+                style={
+                  {
+                    width: (i % 3) + 1 + "px",
+                    height: (i % 3) + 1 + "px",
+                    top: ((i * 37 + 13) % 100) + "%",
+                    left: ((i * 53 + 7) % 100) + "%",
+                    "--base-opacity": baseOpacity,
+                    "--duration": ((i * 73) % 3) + 2 + "s",
+                    "--delay": (-(i * 137.5) % 2) + "s",
+                  } as React.CSSProperties
+                }
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/space" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
