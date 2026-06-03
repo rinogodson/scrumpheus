@@ -34,6 +34,8 @@ const HomePage = () => {
 
     const apiUrl = "https://hackatime.hackclub.com/api/v1/authenticated/me";
 
+    let unsubscribe = () => {};
+
     fetch(apiUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,11 +53,11 @@ const HomePage = () => {
         console.log("User Data:", user);
         setHackatimeUser(user);
 
-        const userRef = doc(db, "users", user.id);
+        const userRef = doc(db, "users", String(user.id));
         await setDoc(
           userRef,
           {
-            username: user.username,
+            username: user.github_username || "",
             photo: user.photo || "",
             lastSeen: new Date().toISOString(),
           },
@@ -66,19 +68,23 @@ const HomePage = () => {
           collection(db, "spaceships"),
           where("userId", "==", user.id),
         );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+
+        unsubscribe = onSnapshot(q, (snapshot) => {
           const loadedProjects = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
           setProjects(loadedProjects);
+          console.log("Loaded projects:", loadedProjects);
         });
-
-        return () => unsubscribe();
       })
       .catch((err) => {
         console.error("Fetch Error:", err.message);
       });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const handleCreateProjectModal = () => {
@@ -171,39 +177,6 @@ const HomePage = () => {
         </button>
       </div>
       <div className="h-[90%] w-full rounded-[3rem] bg-black shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)] relative overflow-hidden">
-        {projects.length === 0 ? (
-          <p className="text-white">No projects yet. Build a ship!</p>
-        ) : (
-          <ul>
-            {projects.map((project) => (
-              <li
-                key={project.id}
-                className="bg-[#333] p-4 text-white rounded-lg w-full max-w-md shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)]"
-              >
-                <h4>{project.projectName}</h4>
-                <p>Goal: {project.goalHours} hours</p>
-                <div
-                  style={{
-                    background: "#555",
-                    width: "100%",
-                    height: "20px",
-                    borderRadius: "10px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <div
-                    style={{
-                      background: "#4caf50",
-                      width: `${(project.currentHours / project.goalHours) * 100}%`,
-                      height: "100%",
-                      borderRadius: "10px",
-                    }}
-                  ></div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
         {Array.from({ length: 60 }, (_, i) => (
           <div
             key={i}
@@ -217,6 +190,31 @@ const HomePage = () => {
             }}
           />
         ))}
+        <div className="absolute inset-0 p-10 flex flex-wrap content-start gap-5 overflow-y-auto">
+          {projects.map(
+            (project: {
+              id: number;
+              currentHours: number;
+              goalHours: number;
+              projectName: string;
+              status: string;
+            }) => (
+              <div
+                key={project.id}
+                className="z-10 bg-white/5 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-white w-64 h-fit flex flex-col gap-2 shadow-xl"
+              >
+                <h3 className="text-xl font-bold">{project.projectName}</h3>
+                <p className="text-sm opacity-80">Goal: {project.goalHours}h</p>
+                <p className="text-sm opacity-80">
+                  Current: {project.currentHours}h
+                </p>
+                <div className="mt-2 text-xs font-semibold px-3 py-1 bg-[#D8A657] text-amber-950 rounded-full w-fit capitalize">
+                  {project.status}
+                </div>
+              </div>
+            ),
+          )}
+        </div>
       </div>
       <div className="h-fit w-fit rounded-full border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
         <button
@@ -228,10 +226,7 @@ const HomePage = () => {
         </button>
       </div>
       <div className="h-fit w-fit rounded-full left-10 border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
-        <button
-          onClick={syncProjects}
-          className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]"
-        >
+        <button className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]">
           Sync
         </button>
       </div>
