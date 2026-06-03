@@ -94,6 +94,7 @@ const HomePage = () => {
   };
 
   const handleAddProject = async (e) => {
+    setShowForm(false);
     e.preventDefault();
     if (!projectName || !goalHours || !hackatimeUser) return;
 
@@ -108,7 +109,6 @@ const HomePage = () => {
     //form clearence here:
     setProjectName("");
     setGoalHours("");
-    setShowForm(false);
   };
 
   if (!hackatimeUser)
@@ -201,15 +201,31 @@ const HomePage = () => {
             }) => (
               <div
                 key={project.id}
-                className="z-10 bg-white/5 backdrop-blur-md border border-white/20 p-5 rounded-2xl text-white w-64 h-fit flex flex-col gap-2 shadow-xl"
+                className="z-10 bg-white/5 backdrop-blur-md border border-white/20 p-5 rounded-4xl text-white w-64 h-fit flex flex-col gap-2.5 shadow-xl"
               >
                 <h3 className="text-xl font-bold">{project.projectName}</h3>
-                <p className="text-sm opacity-80">Goal: {project.goalHours}h</p>
-                <p className="text-sm opacity-80">
-                  Current: {project.currentHours}h
-                </p>
-                <div className="mt-2 text-xs font-semibold px-3 py-1 bg-[#D8A657] text-amber-950 rounded-full w-fit capitalize">
-                  {project.status}
+                <div
+                  style={{
+                    backgroundColor:
+                      project.status == "active" ? "#D8A657" : "red",
+                  }}
+                  className="relative w-full h-fit flex flex-col rounded-2xl overflow-hidden py-3 justify-center items-center font-black"
+                >
+                  <div
+                    style={{
+                      width:
+                        String(
+                          (project.currentHours / project.goalHours) * 100,
+                        ) + "%",
+                    }}
+                    className="absolute h-full bg-white/30 left-0"
+                  ></div>
+                  <p className="text-shadow-xs text-sm uppercase">
+                    {project.status}
+                  </p>
+                  <p className="text-shadow-2xs">
+                    {project.currentHours}/{project.goalHours} hours
+                  </p>
                 </div>
               </div>
             ),
@@ -225,11 +241,11 @@ const HomePage = () => {
           Create a station
         </button>
       </div>
-      <div className="h-fit w-fit rounded-full left-10 border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
-        <button className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]">
-          Sync
-        </button>
-      </div>
+      {/* <div className="h-fit w-fit rounded-full left-10 border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100"> */}
+      {/*   <button className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]"> */}
+      {/*     Sync */}
+      {/*   </button> */}
+      {/* </div> */}
     </div>
   );
 };
