@@ -22,19 +22,22 @@ const DIRECTIONS = [
   { dx: 1, dy: 0, connChar: "═" }, // Right
 ];
 
-const setCell = (x: number, y: number, char: string) =>
-  grid.set(`${x},${y}`, char);
-const getCell = (x: number, y: number) => grid.get(`${x},${y}`);
-
-const STANDARD_PARTS = ["V", "O", "D", "M", "N"];
-
-const grid = new Map<string, string>();
+const setCell = (
+  x: number,
+  y: number,
+  char: string,
+  grid: Map<string, string>,
+) => grid.set(`${x},${y}`, char);
+const getCell = (x: number, y: number, grid: Map<string, string>) =>
+  grid.get(`${x},${y}`);
 
 function generateStation(size: number, seed: string) {
-  grid.clear();
+  const STANDARD_PARTS = ["V", "O", "D", "M", "N"];
+  const grid = new Map<string, string>();
+
   const random = createPRNG(seed);
 
-  setCell(0, 0, "U");
+  setCell(0, 0, "U", grid);
 
   //the x and y here is the x and y position of the component where the socket is
   const openSockets: Socket[] = DIRECTIONS.map((dir) => ({
@@ -49,7 +52,8 @@ function generateStation(size: number, seed: string) {
   let partsAdded = 0;
 
   while (partsAdded < totalExtraParts && openSockets.length > 0) {
-    const socketIndex = Math.floor(random() * openSockets.length);
+    //for anyone reading this code, taking the power of random() is to avoid making the spaceship very longyy... this method will respect the central hull
+    const socketIndex = Math.floor(random() * random() * openSockets.length);
     const socket = openSockets.splice(socketIndex, 1)[0];
 
     const connX = socket.x + socket.dx;
@@ -57,34 +61,29 @@ function generateStation(size: number, seed: string) {
     const compX = socket.x + socket.dx * 2;
     const compY = socket.y + socket.dy * 2;
 
-    if (getCell(compX, compY)) continue;
+    if (getCell(compX, compY, grid)) continue;
     //solar panel logic here, the solar panel is the impostor here, it takes two space
     const isSolarPanel = partsAdded >= 1 && random() > 0.7;
 
     if (isSolarPanel) {
-      const extraX = compX + socket.dx;
-      const extraY = compY + socket.dy;
-
-      if (getCell(extraX, extraY)) continue;
-
-      setCell(connX, connY, socket.connChar);
+      if (getCell(connX, connY, grid) || getCell(compX, compY, grid)) continue;
 
       if (socket.dx !== 0) {
         //horiz
-        setCell(compX, compY, "=");
-        setCell(extraX, extraY, "=");
+        setCell(connX, connY, "$", grid);
+        setCell(compX, compY, "$", grid);
       } else {
         //vertical
-        setCell(compX, compY, "H");
-        setCell(extraX, extraY, "H");
+        setCell(connX, connY, "&", grid);
+        setCell(compX, compY, "&", grid);
       }
       partsAdded++;
     } else {
       //if not an impostor
-      setCell(connX, connY, socket.connChar);
+      setCell(connX, connY, socket.connChar, grid);
       const randomPart =
         STANDARD_PARTS[Math.floor(random() * STANDARD_PARTS.length)];
-      setCell(compX, compY, randomPart);
+      setCell(compX, compY, randomPart, grid);
 
       DIRECTIONS.forEach((dir) => {
         if (dir.dx !== -socket.dx || dir.dy !== -socket.dy) {
@@ -100,10 +99,11 @@ function generateStation(size: number, seed: string) {
       partsAdded++;
     }
   }
+  return grid;
 }
 
 //DEBUG
-function printStation(size: number, seed: string) {
+function printStation(size: number, seed: string, grid: Map<string, string>) {
   let minX = 0,
     maxX = 0,
     minY = 0,
@@ -125,7 +125,7 @@ function printStation(size: number, seed: string) {
   for (let y = minY; y <= maxY; y++) {
     let rowStr = "";
     for (let x = minX; x <= maxX; x++) {
-      rowStr += getCell(x, y) || " ";
+      rowStr += getCell(x, y, grid) || " ";
     }
     console.log(rowStr);
   }
@@ -134,8 +134,5 @@ function printStation(size: number, seed: string) {
 
 const size = 20;
 const seed = "stardance";
-generateStation(size, seed);
-printStation(size, seed);
-
-generateStation(size, seed);
-printStation(size, seed);
+const grid = generateStation(size, seed);
+printStation(size, seed, grid);
