@@ -10,7 +10,8 @@ import {
   doc,
   setDoc,
 } from "./firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+// import { Application } from "@pixi/react";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -27,6 +28,8 @@ const HomePage = () => {
   //input stuff
   const [projectName, setProjectName] = useState("");
   const [goalHours, setGoalHours] = useState("");
+
+  const parentRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem("hackatime_access");
@@ -176,61 +179,57 @@ const HomePage = () => {
           Log Out
         </button>
       </div>
-      <div className="h-[90%] w-full rounded-[3rem] bg-black shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)] relative overflow-hidden">
-        {Array.from({ length: 60 }, (_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: (i % 3) + 1 + "px",
-              height: (i % 3) + 1 + "px",
-              top: ((i * 37 + 13) % 100) + "%",
-              left: ((i * 53 + 7) % 100) + "%",
-              opacity: ((i * 11 + 3) % 5) / 5 + 0.3,
-            }}
-          />
-        ))}
-        <div className="absolute inset-0 p-10 flex flex-wrap content-start gap-5 overflow-y-auto">
-          {projects.map(
-            (project: {
-              id: number;
-              currentHours: number;
-              goalHours: number;
-              projectName: string;
-              status: string;
-            }) => (
-              <div
-                key={project.id}
-                className="z-10 bg-white/5 backdrop-blur-md border border-white/20 p-5 rounded-4xl text-white w-64 h-fit flex flex-col gap-2.5 shadow-xl"
-              >
-                <h3 className="text-xl font-bold">{project.projectName}</h3>
-                <div
-                  style={{
-                    backgroundColor:
-                      project.status == "active" ? "#D8A657" : "red",
-                  }}
-                  className="relative w-full h-fit flex flex-col rounded-2xl overflow-hidden py-3 justify-center items-center font-black"
-                >
-                  <div
-                    style={{
-                      width:
-                        String(
-                          (project.currentHours / project.goalHours) * 100,
-                        ) + "%",
-                    }}
-                    className="absolute h-full bg-white/30 left-0"
-                  ></div>
-                  <p className="text-shadow-xs text-sm uppercase">
-                    {project.status}
-                  </p>
-                  <p className="text-shadow-2xs">
-                    {project.currentHours}/{project.goalHours} hours
-                  </p>
-                </div>
-              </div>
-            ),
-          )}
-        </div>
+      <div
+        ref={parentRef}
+        className="h-[90%] w-full rounded-[3rem] bg-black shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)] relative overflow-hidden"
+      >
+        {/* <Application */}
+        {/*   autoStart */}
+        {/*   sharedTicker */}
+        {/*   resizeTo={parentRef} */}
+        {/*   backgroundAlpha={0.1} */}
+        {/*   backgroundColor={0x000000} */}
+        {/* /> */}
+        {/* THE DIVIDE -------- */}
+        {/* {projects.map( */}
+        {/*   (project: { */}
+        {/*     id: number; */}
+        {/*     currentHours: number; */}
+        {/*     goalHours: number; */}
+        {/*     projectName: string; */}
+        {/*     status: string; */}
+        {/*   }) => ( */}
+        {/*     <div */}
+        {/*       key={project.id} */}
+        {/*       className="z-10 bg-white/5 backdrop-blur-md border border-white/20 p-5 rounded-4xl text-white w-64 h-fit flex flex-col gap-2.5 shadow-xl" */}
+        {/*     > */}
+        {/*       <h3 className="text-xl font-bold">{project.projectName}</h3> */}
+        {/*       <div */}
+        {/*         style={{ */}
+        {/*           backgroundColor: */}
+        {/*             project.status == "active" ? "#D8A657" : "red", */}
+        {/*         }} */}
+        {/*         className="relative w-full h-fit flex flex-col rounded-2xl overflow-hidden py-3 justify-center items-center font-black" */}
+        {/*       > */}
+        {/*         <div */}
+        {/*           style={{ */}
+        {/*             width: */}
+        {/*               String( */}
+        {/*                 (project.currentHours / project.goalHours) * 100, */}
+        {/*               ) + "%", */}
+        {/*           }} */}
+        {/*           className="absolute h-full bg-white/30 left-0" */}
+        {/*         ></div> */}
+        {/*         <p className="text-shadow-xs text-sm uppercase"> */}
+        {/*           {project.status} */}
+        {/*         </p> */}
+        {/*         <p className="text-shadow-2xs"> */}
+        {/*           {project.currentHours}/{project.goalHours} hours */}
+        {/*         </p> */}
+        {/*       </div> */}
+        {/*     </div> */}
+        {/*   ), */}
+        {/* )} */}
       </div>
       <div className="h-fit w-fit rounded-full border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
         <button

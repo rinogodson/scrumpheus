@@ -33,7 +33,7 @@ const getCell = (x: number, y: number, grid: Map<string, string>) =>
 
 function generateStation(size: number, seed: string) {
   if (size > 70) size = 70;
-  const STANDARD_PARTS = ["V", "O", "D", "R", "M", "N", "Z"];
+  const STANDARD_PARTS = ["V", "O", "D", "R", "M", "N", "Z", "W"];
   const grid = new Map<string, string>();
 
   const random = createPRNG(seed);
@@ -101,41 +101,4 @@ function generateStation(size: number, seed: string) {
     }
   }
   return grid;
-}
-
-//DEBUG
-function printStation(size: number, seed: string, grid: Map<string, string>) {
-  let minX = 0,
-    maxX = 0,
-    minY = 0,
-    maxY = 0;
-
-  for (const key of grid.keys()) {
-    const [xStr, yStr] = key.split(",");
-    const x = parseInt(xStr);
-    const y = parseInt(yStr);
-
-    if (x < minX) minX = x;
-    if (x > maxX) maxX = x;
-    if (y < minY) minY = y;
-    if (y > maxY) maxY = y;
-  }
-
-  console.log(`\n=== size: ${size} | seed: ${seed} ===\n`);
-  for (let y = minY; y <= maxY; y++) {
-    let rowStr = "";
-    for (let x = minX; x <= maxX; x++) {
-      rowStr += getCell(x, y, grid) || " ";
-    }
-    console.log(rowStr);
-  }
-  console.log("\n-----------------------------------------\n");
-}
-
-const seed = "kerala-hackclub";
-
-for (let i = 0; i < 50; i++) {
-  const size = i;
-  const grid = generateStation(size, seed);
-  printStation(size, seed, grid);
 }

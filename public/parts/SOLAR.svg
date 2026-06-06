@@ -1,0 +1,27 @@
+<svg width="100" height="200" viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="44.5" y="0.5" width="11" height="42" fill="#515253" stroke="black"/>
+<rect x="-0.5" y="0.5" width="81" height="133" transform="matrix(1 0 0 -1 10 191)" fill="#1850A0" stroke="black"/>
+<line x1="20.5" y1="51.1111" x2="20.5" y2="190" stroke="white"/>
+<line x1="30.5" y1="50" x2="30.5" y2="188.889" stroke="white"/>
+<line x1="40.5" y1="50" x2="40.5" y2="188.889" stroke="white"/>
+<line x1="50.5" y1="50" x2="50.5" y2="188.889" stroke="white"/>
+<line x1="60.5" y1="50" x2="60.5" y2="188.889" stroke="white"/>
+<line x1="70.5" y1="50" x2="70.5" y2="188.889" stroke="white"/>
+<line x1="80.5" y1="50" x2="80.5" y2="188.889" stroke="white"/>
+<line x1="10" y1="103.944" x2="89" y2="103.944" stroke="white"/>
+<line x1="11" y1="146.167" x2="90" y2="146.167" stroke="white"/>
+<line x1="11" y1="82.8333" x2="90" y2="82.8333" stroke="white"/>
+<line x1="10" y1="125.055" x2="89" y2="125.055" stroke="white"/>
+<line x1="11" y1="167.278" x2="90" y2="167.278" stroke="white"/>
+<line x1="11" y1="72.8333" x2="90" y2="72.8333" stroke="white"/>
+<line x1="10" y1="115.056" x2="89" y2="115.056" stroke="white"/>
+<line x1="11" y1="157.278" x2="90" y2="157.278" stroke="white"/>
+<line x1="11" y1="93.9445" x2="90" y2="93.9445" stroke="white"/>
+<line x1="10" y1="136.167" x2="89" y2="136.167" stroke="white"/>
+<line x1="11" y1="178.389" x2="90" y2="178.389" stroke="white"/>
+<line x1="11" y1="189.5" x2="90" y2="189.5" stroke="white"/>
+<rect x="0.5" y="-0.5" width="79" height="130" transform="matrix(1 0 0 -1 10 189)" stroke="white"/>
+<rect x="-0.5" y="0.5" width="89" height="9" transform="matrix(1 0 0 -1 6 59)" fill="#515253" stroke="black"/>
+<rect x="0.5" y="-0.5" width="35" height="9" transform="matrix(1 0 0 -1 32 9)" fill="#515253" stroke="black"/>
+<rect x="0.5" y="-0.5" width="35" height="9" transform="matrix(1 0 0 -1 32 49)" fill="#515253" stroke="black"/>
+</svg>
