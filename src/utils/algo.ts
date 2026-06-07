@@ -64,7 +64,7 @@ export function generateStation(size: number, seed: string) {
 
     if (getCell(compX, compY, grid)) continue;
     //solar panel logic here, the solar panel is the impostor here, it takes two space
-    const isSolarPanel = partsAdded >= 1 && random() > 0.5;
+    const isSolarPanel = partsAdded >= 1 && random() > 0.7;
 
     if (isSolarPanel) {
       if (getCell(connX, connY, grid) || getCell(compX, compY, grid)) continue;
