@@ -402,39 +402,41 @@ const HomePage = () => {
         {/*   {renderedShip} */}
         {/* </div> */}
       </div>
-      <div className="w-full flex justify-center items-center gap-4 flex-wrap">
-        <input
-          type="text"
-          placeholder="Seed key"
-          value={shipSeed}
-          onChange={(e) => setShipSeed(e.target.value)}
-          className="px-4 py-2 rounded-xl bg-white/10 border-2 border-white/20 text-white outline-none focus:border-[#E67C41] transition duration-150 placeholder:text-white/40"
-        />
-        <input
-          type="number"
-          placeholder="Scale"
-          value={shipScale}
-          min={1}
-          max={70}
-          onChange={(e) => setShipScale(Number(e.target.value))}
-          className="px-4 py-2 rounded-xl bg-white/10 border-2 border-white/20 text-white outline-none focus:border-[#E67C41] transition duration-150 w-24 placeholder:text-white/40"
-        />
-        <button
-          onClick={handleGenerateShip}
-          className="bg-[#D8A657] px-5 py-2 text-amber-950 font-bold rounded-xl border-2 border-amber-950 hover:brightness-110 active:brightness-130 transition duration-100"
-        >
-          Generate ship
-        </button>
-      </div>
-      {/* <div className="h-fit w-fit rounded-full border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100"> */}
+
+      {/* THE TESTING PART HERE */}
+      {/* <div className="w-full flex justify-center items-center gap-4 flex-wrap"> */}
+      {/*   <input */}
+      {/*     type="text" */}
+      {/*     placeholder="Seed key" */}
+      {/*     value={shipSeed} */}
+      {/*     onChange={(e) => setShipSeed(e.target.value)} */}
+      {/*     className="px-4 py-2 rounded-xl bg-white/10 border-2 border-white/20 text-white outline-none focus:border-[#E67C41] transition duration-150 placeholder:text-white/40" */}
+      {/*   /> */}
+      {/*   <input */}
+      {/*     type="number" */}
+      {/*     placeholder="Scale" */}
+      {/*     value={shipScale} */}
+      {/*     min={1} */}
+      {/*     max={70} */}
+      {/*     onChange={(e) => setShipScale(Number(e.target.value))} */}
+      {/*     className="px-4 py-2 rounded-xl bg-white/10 border-2 border-white/20 text-white outline-none focus:border-[#E67C41] transition duration-150 w-24 placeholder:text-white/40" */}
+      {/*   /> */}
       {/*   <button */}
-      {/*     onClick={handleCreateProjectModal} */}
-      {/*     className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]" */}
+      {/*     onClick={handleGenerateShip} */}
+      {/*     className="bg-[#D8A657] px-5 py-2 text-amber-950 font-bold rounded-xl border-2 border-amber-950 hover:brightness-110 active:brightness-130 transition duration-100" */}
       {/*   > */}
-      {/*     <Rocket className="w-5 h-5" /> */}
-      {/*     Create a station */}
+      {/*     Generate ship */}
       {/*   </button> */}
       {/* </div> */}
+      <div className="h-fit w-fit rounded-full border-[#FEF3E0] border-3 p-1 absolute bottom-8 hover:border-[#E67C41]  hover:scale-105 active:scale-100 transition duration-100">
+        <button
+          onClick={handleCreateProjectModal}
+          className="bg-[#FEF3E0] flex gap-3 px-5 font-bold  py-4 justify-center items-center text-lg rounded-full active:bg-[#F5C577] active:shadow-[0_0_0_5px_rgba(245, 197, 119, 1)] shadow-[inset_0_-1px_3px_2px_rgba(0,0,0,0.3)]"
+        >
+          <Rocket className="w-5 h-5" />
+          Create a station
+        </button>
+      </div>
     </div>
   );
 };
