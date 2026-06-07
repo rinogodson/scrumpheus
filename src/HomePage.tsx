@@ -13,6 +13,7 @@ import {
 import { useEffect, useRef, useState, useMemo } from "react";
 import { generateStation } from "./utils/algo";
 // import { Application } from "@pixi/react";
+import SpaceCanvas from "./SpaceCanvas";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -347,6 +348,7 @@ const HomePage = () => {
         ref={parentRef}
         className="h-[90%] w-full rounded-[3rem] bg-black shadow-[0_1.5px_0_2px_rgba(255,255,255,0.1),0_-1px_0_2px_rgba(0,0,0,0.5)] relative overflow-hidden"
       >
+        <SpaceCanvas projects={projects} />
         {/* <Application */}
         {/*   autoStart */}
         {/*   sharedTicker */}
@@ -394,9 +396,11 @@ const HomePage = () => {
         {/*     </div> */}
         {/*   ), */}
         {/* )} */}
-        <div className="w-full h-full flex justify-center items-center overflow-auto">
-          {renderedShip}
-        </div>
+
+        {/* THE TESTING PART HERE */}
+        {/* <div className="w-full h-full flex justify-center items-center overflow-auto"> */}
+        {/*   {renderedShip} */}
+        {/* </div> */}
       </div>
       <div className="w-full flex justify-center items-center gap-4 flex-wrap">
         <input
