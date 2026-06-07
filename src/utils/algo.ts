@@ -31,7 +31,7 @@ const setCell = (
 const getCell = (x: number, y: number, grid: Map<string, string>) =>
   grid.get(`${x},${y}`);
 
-function generateStation(size: number, seed: string) {
+export function generateStation(size: number, seed: string) {
   if (size > 70) size = 70;
   const STANDARD_PARTS = ["V", "O", "D", "R", "M", "N", "Z", "W"];
   const grid = new Map<string, string>();
