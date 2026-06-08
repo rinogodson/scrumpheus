@@ -17,7 +17,7 @@ const PART_MAP: Record<string, string> = {
   W: "/parts/HAB_4.svg",
 };
 
-const CELL_SIZE = 64;
+export const CELL_SIZE = 64;
 
 const SpaceStation = ({ project, offsetX, offsetY }) => {
   const [isLoaded, setIsLoaded] = useState(false);
