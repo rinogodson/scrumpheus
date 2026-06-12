@@ -272,6 +272,8 @@ const HomePage = () => {
       goalHours: Number(goalHours),
       currentHours: 0,
       status: "active",
+      x: Math.random() * 500 - 250,
+      y: Math.random() * 500 - 250,
     });
 
     //form clearence here:

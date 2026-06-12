@@ -2,6 +2,7 @@ import { extend } from "@pixi/react";
 import { Assets, Container, Sprite } from "pixi.js";
 import { useEffect, useMemo, useState } from "react";
 import { generateStation } from "../utils/algo";
+import { doc, updateDoc, db } from "../firebase";
 
 extend({ Container, Sprite });
 
@@ -19,9 +20,51 @@ const PART_MAP: Record<string, string> = {
 
 export const CELL_SIZE = 64;
 
-const SpaceStation = ({ project, offsetX, offsetY }) => {
+const SpaceStation = ({ project, onHover, onClick }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [position, setPosition] = useState({
+    x: project.x || 0,
+    y: project.y || 0,
+  });
+  const [rotation, setRotation] = useState(project.rotation || 0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    if (!isDragging) {
+      setPosition({ x: project.x || 0, y: project.y || 0 });
+    }
+  }, [project.x, project.y, isDragging]);
+
+  const handlePointerDown = (e) => {
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handlePointerMove = (e) => {
+    if (isDragging) {
+      setPosition((prev) => ({
+        x: prev.x + e.movementX,
+        y: prev.y + e.movementY,
+      }));
+      setRotation((prev) => prev + e.movementX * 0.005);
+    }
+  };
+
+  const handlePointerUp = async (e) => {
+    if (isDragging) {
+      e.stopPropagation();
+      setIsDragging(false);
+
+      const projectRef = doc(db, "spaceships", project.id);
+      await updateDoc(projectRef, {
+        x: position.x,
+        y: position.y,
+        rotation: rotation,
+      });
+    }
+  };
+  ///rendering logic starts here
   useEffect(() => {
     Assets.addBundle("partImages", {
       ...PART_MAP,
@@ -136,7 +179,23 @@ const SpaceStation = ({ project, offsetX, offsetY }) => {
   }, [shipGrid, isLoaded]);
 
   return (
-    <pixiContainer x={offsetX} y={offsetY}>
+    <pixiContainer
+      x={position.x}
+      y={position.y}
+      rotation={rotation}
+      interactive={true}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerUpOutside={handlePointerUp}
+      onPointerOver={(e) => onHover(project, e)}
+      onPointerOut={() => onHover(null, null)}
+      onPointerTap={(e) => {
+        e.stopPropagation();
+        onClick(project);
+      }}
+      cursor="pointer"
+    >
       {sprites}
     </pixiContainer>
   );

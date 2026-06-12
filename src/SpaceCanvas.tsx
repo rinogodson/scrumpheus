@@ -11,6 +11,7 @@ export default function SpaceCanvas({ projects }) {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
   });
+  const [scale, setScale] = useState(1);
   const [isDragging, setIsDragging] = useState(false);
 
   const handlePointerDown = () => setIsDragging(true);
@@ -23,7 +24,13 @@ export default function SpaceCanvas({ projects }) {
       }));
     }
   };
-
+  const handleWheel = (e) => {
+    const zoomSpeed = 0.05;
+    const direction = e.deltaY < 0 ? 1 : -1;
+    setScale((prev) =>
+      Math.max(0.2, Math.min(prev + direction * zoomSpeed, 3)),
+    );
+  };
   const shipDimensions = useMemo(
     () =>
       projects.map((project) => {
@@ -57,9 +64,10 @@ export default function SpaceCanvas({ projects }) {
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
       onPointerMove={handlePointerMove}
+      onWheel={handleWheel}
     >
       <Application resizeTo={window} backgroundAlpha={0} autoStart sharedTicker>
-        <pixiContainer x={cameraPos.x} y={cameraPos.y}>
+        <pixiContainer x={cameraPos.x} y={cameraPos.y} scale={scale}>
           {projects.map((project, index) => {
             const { width, height } = shipDimensions[index];
             const spacingX = index * (width + padding);
@@ -69,8 +77,8 @@ export default function SpaceCanvas({ projects }) {
               <SpaceStation
                 key={project.id}
                 project={project}
-                offsetX={spacingX}
-                offsetY={spacingY}
+                onClick={() => {}}
+                onHover={() => {}}
               />
             );
           })}
